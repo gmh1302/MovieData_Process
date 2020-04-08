@@ -21,7 +21,7 @@ ws.cell(1,5,"좋아요")
 ws.cell(1,6,"싫어요")
 ws.cell(1,7,"평점 평균")
 
-row = 2 # 첫 번째 row는 컬럼명이기 때문에 row를 2를 설정
+row = 2 # 첫 번째 row는 컬럼명이기 때문에 row를 2를 설정.
 
 score_sum = 0
 
