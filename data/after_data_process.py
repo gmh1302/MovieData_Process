@@ -12,7 +12,7 @@ cnt = html.select("body > div > div > div.score_total > strong > em")[0].content
 wb = Workbook()
 ws = wb.create_sheet("기생충", 0)
 
-# csv 파일의 대표 Column을 설정
+# csv 파일의 대표 Column을 설정.
 ws.cell(1,1,"아이디")
 ws.cell(1,2,"날짜")
 ws.cell(1,3,"평점")
