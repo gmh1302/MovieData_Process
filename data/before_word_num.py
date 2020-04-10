@@ -10,7 +10,7 @@ cnt = html.select("body > div > div > div.score_total > strong > em")[0].content
 lst = []; dict = {}
 okt = Okt()
 
-for x in range(244,int(cnt)//10+2): # 1페이지부터 수상일 이후의 댓글을 도출하고자함.
+for x in range(244,int(cnt)//10+2): # 244페이지부터 수상일 이전의 댓글이 존재합니다. 1부터 돌리기에는 시간이 너무 오래걸려서 융통성있게 244부터 시작했습니다.
     html  = bs(requests.get(url + "&page=" + str(x)).content, "html.parser", from_encoding="utf-8")
     size = len(html.select("body > div > div > div.score_result > ul > li > div.score_reple > p")) # 페이지당 댓글의 수만큼 for문을 돌리도록 설정(마지막 페이지에 댓글이 10개가 아닐 수도 있기 때문)
 
