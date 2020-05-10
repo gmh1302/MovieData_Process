@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=d, initial-scale=1.0">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.2.1/raphael.min.js"></script>
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+    <title>Score Page</title>
+
+    <style>
+      button{
+        background:#1AAB8A;
+        color:#fff;
+        border:none;
+        position:relative;
+        height:60px;
+        font-size:1.2em;
+        padding:0 2em;
+        cursor:pointer;
+        transition:800ms ease all;
+        outline:none;
+    }
+    button:hover{
+        background:#fff;
+        corgb(53, 68, 65)AB8A;
+    }
+    button:before,button:after{
+        content:'';
+        position:absolute;
+        top:0;
+        right:0;
+        height:2px;
+        width:0;
+        background: #1AAB8A;
+        transition:400ms ease all;
+    }
+    button:after{
+        right:inherit;
+        top:inherit;
+        left:0;
+        bottom:0;
+    }
+    button:hover:before,button:hover:after{
+        width:100%;
+        transition:800ms ease all;
+    }  
+    </style>
+
+    <script>
+
+        function go_back(){
+            location.href="/"
+        }
+
+        am4core.ready(function() {
+        
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+        
+        // create chart
+        var chart1 = am4core.create("chartdiv", am4charts.GaugeChart);
+        chart1.innerRadius = am4core.percent(82);
+        
+        /**
+         * Normal axis
+         */
+        
+        var axis = chart1.xAxes.push(new am4charts.ValueAxis());
+        axis.min = 0;
+        axis.max = 10;
+        axis.strictMinMax = true;
+        axis.renderer.radius = am4core.percent(80);
+        axis.renderer.inside = true;
+        axis.renderer.line.strokeOpacity = 1;
+        axis.renderer.ticks.template.disabled = false
+        axis.renderer.ticks.template.strokeOpacity = 1;
+        axis.renderer.ticks.template.length = 10;
+        axis.renderer.grid.template.disabled = true;
+        axis.renderer.labels.template.radius = 40;
+        axis.renderer.labels.template.adapter.add("text", function(text) {
+          return text;
+        })
+        
+        /**
+         * Axis for ranges
+         */
+        
+        var colorSet = new am4core.ColorSet();
+        var after_val = {{after_avg_val}};
+        var before_val = {{before_avg_val}}
+
+        var axis2 = chart1.xAxes.push(new am4charts.ValueAxis());
+        axis2.min = 0;
+        axis2.max = 10;
+        axis2.strictMinMax = true;
+        axis2.renderer.labels.template.disabled = true;
+        axis2.renderer.ticks.template.disabled = true;
+        axis2.renderer.grid.template.disabled = true;
+        
+        var range0 = axis2.axisRanges.create();
+        range0.value = 0;
+        range0.endValue = 5;
+        range0.axisFill.fillOpacity = 1;
+        range0.axisFill.fill = colorSet.getIndex(0);
+        
+        var range1 = axis2.axisRanges.create();
+        range1.value = 5;
+        range1.endValue = 10;
+        range1.axisFill.fillOpacity = 1;
+        range1.axisFill.fill = colorSet.getIndex(2);
+        
+        /**
+         * Label
+         */
+        
+        var label = chart1.radarContainer.createChild(am4core.Label);
+        label.isMeasured = false;
+        label.fontSize = 45;
+        label.x = am4core.percent(50);
+        label.y = am4core.percent(100);
+        label.horizontalCenter = "middle";
+        label.verticalCenter = "bottom";
+        label.text = "0.0";
+        
+        
+        /**
+         * Hand
+         */
+        
+        var hand = chart1.hands.push(new am4charts.ClockHand());
+
+        hand.axis = axis2;
+        hand.innerRadius = am4core.percent(20);
+        hand.startWidth = 10;
+        hand.pin.disabled = true;
+        hand.value = before_val;   /* 시작 값 조절 */
+        
+        hand.events.on("propertychanged", function(ev) {
+          range0.endValue = ev.target.value;
+          range1.value = ev.target.value;
+          label.text = axis2.positionToValue(hand.currentPosition).toFixed(1);
+          axis2.invalidate();
+        });
+        
+        setInterval(function() {
+          var value = after_val;
+          var animation = new am4core.Animation(hand, {
+            property: "value",
+            to: value
+          }, 1000, am4core.ease.cubicOut).start();
+        }, 2000);
+        
+        }); // end am4core.ready()
+        </script>
+        
+
+<style>
+    *,
+*:after,
+*:before {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.clearfix:before,
+.clearfix:after {
+	content: " ";
+	display: table;
+}
+
+.clearfix:after {
+	clear: both;
+}
+
+body {
+	font-family: sans-serif;
+	background: #f6f9fa;
+}
+
+h1 {
+	color: #ccc;
+	text-align: center;
+}
+
+a {
+  color: #ccc;
+  text-decoration: none;
+  outline: none;
+}
+
+/*Fun begins*/
+.tab_container {
+	width: 70%;
+	margin: 0 auto;
+	padding-top: 70px;
+	position: relative;
+}
+
+input, section {
+  clear: both;
+  padding-top: 10px;
+  display: none;
+}
+
+label {
+  font-weight: 700;
+  font-size: 18px;
+  display: block;
+  float: left;
+  width: 50%;
+  padding: 1.5em;
+  color: #757575;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  background: #f0f0f0;
+}
+
+#tab1:checked ~ #content1,
+#tab2:checked ~ #content2,
+#tab3:checked ~ #content3,
+#tab4:checked ~ #content4,
+#tab5:checked ~ #content5 {
+  display: block;
+  padding: 20px;
+  background: #fff;
+  color: #999;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.tab_container .tab-content p,
+.tab_container .tab-content h3 {
+  -webkit-animation: fadeInScale 0.7s ease-in-out;
+  -moz-animation: fadeInScale 0.7s ease-in-out;
+  animation: fadeInScale 0.7s ease-in-out;
+}
+.tab_container .tab-content h3  {
+  text-align: center;
+}
+
+.tab_container [id^="tab"]:checked + label {
+  background: #fff;
+  box-shadow: inset 0 3px rgb(4, 92, 26);
+}
+
+.tab_container [id^="tab"]:checked + label .fa {
+  color: #0CE;
+}
+
+label .fa {
+  font-size: 1.3em;
+  margin: 0 0.4em 0 0;
+}
+
+/*Media query*/
+@media only screen and (max-width: 930px) {
+  label span {
+    font-size: 14px;
+  }
+  label .fa {
+    font-size: 14px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  label span {
+    display: none;
+  }
+
+  label .fa {
+    font-size: 16px;
+  }
+
+  .tab_container {
+    width: 98%;
+  }
+}
+
+/*Content Animation*/
+@keyframes fadeInScale {
+  0% {
+  	transform: scale(0.9);
+  	opacity: 0;
+  }
+  
+  100% {
+  	transform: scale(1);
+  	opacity: 1;
+  }
+}
+
+/*************************************************/
+
+#chartdiv {
+  width: 100%;
+  height: 500px;
+}
+
+</style>
+
+</head>
+<body>
+    <h1 class="mb-3 bd-text-purple-bright" style="color: rgb(0, 0, 0); text-align: center; padding-top:3%;">
+        기생충 리뷰 데이터 분석
+    </h1>
+    <button onclick="go_back()" style="margin-left:15%; margin-top:20px;">뒤로가기</button>
+    <div class="tab_container">
+        <input id="tab1" type="radio" name="tabs" checked>
+        <label for="tab1"><i class="fa fa-code"></i><span>수상일(2020.02.09) 이전 / 이후 평점</span></label>
+
+        <input id="tab2" type="radio" name="tabs">
+        <label for="tab2"><i class="fa fa-pencil-square-o"></i><span>빈출 단어 확인(워드클라우드)</span></label>
+
+        <section id="content1" class="tab-content">
+            <div>
+              <div id="chartdiv"></div> 
+            </div>
+            <h3>수상일 이후</h3>
+        </section>
+        <section id="content2" class="tab-content">
+          <h3>
+            <img src="https://postfiles.pstatic.net/MjAyMDA1MDNfMTU3/MDAxNTg4NDM4MzUxMzk0.3IoQgqT8IvpZt6f23-_mi8ydu-NjWSjF60FLQEj5bwUg.G0rFslQTjBRhxLdtiNQjqDjavXoIGsdQ0aq9is3w7a8g.JPEG.mh_kim0713/wordcloud.JPG?type=w966">  
+          </h3>
+        </section>
+    </div>
+
+</body>
+
+</html>
